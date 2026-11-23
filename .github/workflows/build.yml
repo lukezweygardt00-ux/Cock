@@ -12,6 +12,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Unzip source if it was uploaded as a zip
+        run: |
+          if [ ! -f build.gradle ]; then
+            zipfile=$(ls *.zip | head -n 1)
+            echo "Unzipping $zipfile"
+            unzip -o "$zipfile"
+          fi
+          ls -la
+
       - name: Set up JDK 17 (Temurin) with Gradle cache
         uses: actions/setup-java@v4
         with:
@@ -19,7 +28,7 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Set up Gradle 8.1.1 (with caching)
+      - name: Set up Gradle 8.1.1
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.1.1'
